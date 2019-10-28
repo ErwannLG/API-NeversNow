@@ -29,7 +29,7 @@ class getController extends AbstractController {
       $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
       $match = true;
 
-      if ($request->headers->get('app') != 'neversNow') {
+      if ($request->headers->get('app') == 'neversNow') {
         switch ($action) {
           case 'getPmr':
             $infos = $this->getDoctrine()->getRepository(Allpmr::class)->findAll();
