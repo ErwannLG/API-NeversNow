@@ -11,62 +11,53 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Serializer;
+use App\Entity\Allverre;
+use App\Entity\Alldech;
 use App\Entity\Allwifi;
+use App\Entity\Alltext;
 use App\Entity\Allpmr;
 
 class getController extends AbstractController {
     /** @Route("/{action}") */
     public function pmr($action) {
 
-      if ($action != 'favicon.ico') {
-        $request = Request::createFromGlobals();
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-        if ($request->headers->get('app') == 'neversNow') {
-          switch ($action) {
-            case 'getPmr':
-              $infos = $this->getDoctrine()->getRepository(Allpmr::class)->findAll();
+      $request = Request::createFromGlobals();
 
-              $json = $serializer->serialize($infos, 'json');
+      $response = new Response();
+      $response->headers->set('Content-Type', 'application/json');
 
-              $response = new Response();
-              $response->setContent($json);
-              $response->headers->set('Content-Type', 'application/json');
-              $response->send();
+      $serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+      $match = true;
 
-              return $response;
-              break;
-            case 'getWifi':
-              $infos = $this->getDoctrine()->getRepository(Allwifi::class)->findAll();
-
-              $json = $serializer->serialize($infos, 'json');
-
-              $response = new Response();
-              $response->setContent($json);
-              $response->headers->set('Content-Type', 'application/json');
-              $response->send();
-
-              return $response;
-              break;
-            case 'getDech':
-              $infos = $this->getDoctrine()->getRepository(Alldech::class)->findAll();
-
-              $json = $serializer->serialize($infos, 'json');
-
-              $response = new Response();
-              $response->setContent($json);
-              $response->headers->set('Content-Type', 'application/json');
-              $response->send();
-
-              return $response;
-              break;
-            default:
-              break;
-          }
+      if ($request->headers->get('app') != 'neversNow') {
+        switch ($action) {
+          case 'getPmr':
+            $infos = $this->getDoctrine()->getRepository(Allpmr::class)->findAll();
+            break;
+          case 'getWifi':
+            $infos = $this->getDoctrine()->getRepository(Allwifi::class)->findAll();
+            break;
+          case 'getDech':
+            $infos = $this->getDoctrine()->getRepository(Alldech::class)->findAll();
+            break;
+          case 'getVerre':
+            $infos = $this->getDoctrine()->getRepository(Allverre::class)->findAll();
+            break;
+          case 'getText':
+            $infos = $this->getDoctrine()->getRepository(Alltext::class)->findAll();
+            break;
+          default:
+            $match = false;
+            break;
         }
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->send();
-        return $response;
       }
+
+      if ($match) {
+        $json = $serializer->serialize($infos, 'json');
+        $response->setContent($json);
+      }
+
+      // $response->send();
+      return $response;
     }
 }
