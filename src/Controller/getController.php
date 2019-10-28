@@ -47,6 +47,18 @@ class getController extends AbstractController {
 
               return $response;
               break;
+            case 'getDech':
+              $infos = $this->getDoctrine()->getRepository(Alldech::class)->findAll();
+
+              $json = $serializer->serialize($infos, 'json');
+
+              $response = new Response();
+              $response->setContent($json);
+              $response->headers->set('Content-Type', 'application/json');
+              $response->send();
+
+              return $response;
+              break;
             default:
               break;
           }
