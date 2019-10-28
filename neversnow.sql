@@ -22,10 +22,13 @@ SET time_zone = "+00:00";
 -- Base de données :  `neversNow`
 --
 
+CREATE DATABASE IF NOT EXISTS `neversNow`;
+USE `neversNow`;
+
 -- --------------------------------------------------------
 
 --
--- Structure de la table `nevers `
+-- Structure de la table `allpmr`
 --
 
 DROP TABLE IF EXISTS `allpmr`;
